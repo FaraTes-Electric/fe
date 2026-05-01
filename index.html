@@ -35,22 +35,23 @@
             overflow-x: hidden;
         }
 
-        /* --- THE STEVE JOBS MINIMALIST LOGO STYLING --- */
+        /* --- LOGO STYLING --- */
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 16px;
         }
 
         .logo-text {
-            font-weight: 600;
-            font-size: 1.15rem;
-            letter-spacing: 0.04em;
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
         }
 
         .logo-svg {
-            height: 28px;
-            width: 28px;
+            height: 32px;
+            width: auto;
             stroke: var(--text-main);
             fill: none;
             stroke-width: 1.5;
@@ -102,20 +103,15 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
+            width: 100%;
             height: 100vh;
             z-index: 1;
-            opacity: 0.6; 
+            opacity: 0.8; /* Brighter during intro */
             pointer-events: none;
-            transition: opacity 2s ease-in-out; 
+            transition: opacity 2s ease-in-out; /* Slow fade out when stopped */
         }
 
-        #shader-container canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-
+        /* Intro Logo - Visible over Shader */
         #intro-logo {
             position: fixed;
             top: 40px;
@@ -142,9 +138,10 @@
         }
 
         #brand-reveal h2 {
-            font-size: clamp(2.5rem, 6vw, 6rem);
-            font-weight: 600;
-            letter-spacing: -0.04em;
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 700;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
             text-shadow: 0 0 40px rgba(255,255,255,0.3);
         }
 
@@ -326,41 +323,13 @@
         .signature-name { font-size: 1.5rem; font-weight: 500; letter-spacing: -0.02em; }
         .signature-title { color: var(--text-muted); margin-top: 8px; }
 
-        /* --- FOOTER STYLING --- */
         footer {
-            padding: 100px 40px 80px;
+            padding: 80px 40px;
             border-top: 1px solid var(--border-tech);
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-        }
-
-        footer h2 {
-            font-size: 2rem;
-            font-weight: 400;
-            margin-bottom: 40px;
-        }
-
-        .footer-info {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            margin-top: 40px;
-        }
-
-        .footer-email {
-            color: var(--text-main);
-            text-decoration: none;
-            font-size: 1.2rem;
-            font-weight: 500;
-            letter-spacing: 0.02em;
-            transition: opacity 0.3s ease;
-        }
-
-        .footer-email:hover {
-            opacity: 0.7;
         }
 
         .reveal {
@@ -384,37 +353,52 @@
             nav { padding: 16px 20px; }
             #intro-logo { top: 16px; left: 20px; }
             .logo-text { display: none; }
+            .logo-svg { height: 28px; }
             .btn-buy { padding: 8px 16px; font-size: 0.8rem; }
             .spec-item { border-right: none; border-bottom: 1px solid var(--border-tech); padding: 40px 20px; }
             .spec-item:last-child { border-bottom: none; }
             .manifesto { padding: 80px 20px; }
-            #brand-reveal h2 { font-size: 2rem; }
+            #brand-reveal h2 { font-size: 2.5rem; }
         }
     </style>
 </head>
 <body>
 
+    <!-- REUSABLE SVG LOGO DEFS -->
     <svg style="position: absolute; width: 0; height: 0;" aria-hidden="true">
         <defs>
             <filter id="threshold">
                 <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 255 -140" />
             </filter>
-            
+            <!-- New, sharper Node Network Logo -->
             <g id="farates-logo">
-                <rect x="2" y="2" width="26" height="26" rx="6" fill="none" stroke="currentColor" stroke-width="2"/>
-                <circle cx="15" cy="15" r="3" fill="currentColor"/>
-                <circle cx="15" cy="15" r="7" stroke="currentColor" stroke-width="1" opacity="0.3" fill="none"/>
+                <path d="M10,15 L25,5 L45,5 L60,15 L45,25 L25,25 Z" opacity="0.8" stroke-width="2"/>
+                <line x1="10" y1="15" x2="45" y2="15" opacity="0.6"/>
+                <line x1="25" y1="5" x2="45" y2="25" opacity="0.6"/>
+                <line x1="25" y1="25" x2="45" y2="5" opacity="0.6"/>
+                <circle cx="10" cy="15" r="2.5" fill="var(--text-main)"/>
+                <circle cx="25" cy="5" r="2" fill="var(--bg-pure)" stroke="var(--text-main)" stroke-width="1.5"/>
+                <circle cx="45" cy="5" r="2" fill="var(--text-main)"/>
+                <circle cx="60" cy="15" r="3" fill="var(--bg-pure)" stroke="var(--text-main)" stroke-width="2"/>
+                <circle cx="45" cy="25" r="2" fill="var(--text-main)"/>
+                <circle cx="25" cy="25" r="2" fill="var(--bg-pure)" stroke="var(--text-main)" stroke-width="1.5"/>
+                <!-- Pulse rings -->
+                <circle cx="60" cy="15" r="7" stroke="var(--text-main)" opacity="0.3" stroke-width="1"/>
+                <circle cx="60" cy="15" r="12" stroke="var(--text-main)" opacity="0.1" stroke-width="1"/>
             </g>
         </defs>
     </svg>
 
+    <!-- Global Shader Background -->
     <div id="shader-container"></div>
 
+    <!-- Intro Logo (Visible over shader before nav appears) -->
     <div id="intro-logo" class="logo-container">
-        <svg class="logo-svg" viewBox="0 0 30 30"><use href="#farates-logo"/></svg>
-        <div class="logo-text">FaraTes Electric</div>
+        <svg class="logo-svg" viewBox="0 0 75 30"><use href="#farates-logo"/></svg>
+        <div class="logo-text">FaraTes</div>
     </div>
 
+    <!-- STAGE 1: Preloader -->
     <div id="preloader">
         <div class="gooey-container">
             <span id="text1" class="gooey-text"></span>
@@ -422,15 +406,17 @@
         </div>
     </div>
 
+    <!-- STAGE 2: Brand Drop -->
     <div id="brand-reveal">
         <h2>FaraTes Electric</h2>
     </div>
 
+    <!-- STAGE 3: Main UI -->
     <div id="main-ui">
         <nav>
             <div class="logo-container">
-                <svg class="logo-svg" viewBox="0 0 30 30"><use href="#farates-logo"/></svg>
-                <div class="logo-text">FaraTes Electric</div>
+                <svg class="logo-svg" viewBox="0 0 75 30"><use href="#farates-logo"/></svg>
+                <div class="logo-text">FaraTes</div>
             </div>
             <a href="#" class="btn-buy">Acquire — ₹25,000</a>
         </nav>
@@ -475,31 +461,29 @@
                 <span class="tech-font manifesto-title reveal">Project Rationale</span>
                 <p class="reveal">The true bottleneck in modern intelligence systems isn't model size—it's ownership. <span>We are tethering our most intimate logic and daily reasoning to cloud servers we do not control.</span></p>
                 
-                <p class="reveal delay-1">My academic research centers on Causal Neuro-Symbolic AI, Neuromorphic systems, and Edge AI—exploring the bridge between human logic and machine learning. FaraTes Electric is the physical manifestation of that work. <span>Translating advanced academic architecture into tangible, privacy-first hardware.</span></p>
+                <p class="reveal delay-1">FaraTes Electric approaches this strictly as a hardware problem. Rooted in Chennai's rigorous engineering ecosystem and driven by research in neuro-symbolic and neuromorphic architectures, this is the 3rd device. <span>Not a smartphone app. Not a web interface.</span></p>
                 
-                <p class="reveal delay-2">This is the 3rd device. Not a smartphone app. Not a web interface. It is a physical, edge-computing architecture designed to run high-efficiency GPTs locally in your home, drawing less power than a standard lightbulb. No internet connection required. Your data never leaves the chassis. <span>True ambient intelligence requires absolute privacy.</span></p>
+                <p class="reveal delay-2">It is a physical, edge-computing architecture designed to run high-efficiency GPTs locally in your home, drawing less power than a standard lightbulb. No internet connection required. Your data never leaves the chassis. <span>True ambient intelligence requires absolute privacy.</span></p>
                 
                 <div class="signature-block reveal delay-3">
                     <div>
                         <div class="signature-name">Manojshyaam C J</div>
                         <div class="signature-title tech-font">Intelligent Systems Builder / MS Scholar, IIT Madras</div>
                     </div>
+                    <div class="tech-font">Chennai, India</div>
                 </div>
             </section>
 
             <footer>
                 <h2 class="reveal">Intelligence, localized.</h2>
-                <a href="#" class="btn-buy reveal delay-1" style="padding: 12px 32px; font-size: 1rem; display: inline-block;">Deploy Hardware</a>
-                
-                <div class="footer-info reveal delay-2">
-                    <a href="mailto:farateselectric@gmail.com" class="footer-email">farateselectric@gmail.com</a>
-                    <p class="tech-font">Chennai, Tamil Nadu, India</p>
-                </div>
+                <a href="#" class="btn-buy reveal delay-1" style="padding: 12px 32px; font-size: 1rem; margin-bottom: 40px; display: inline-block;">Deploy Hardware</a>
             </footer>
         </div>
     </div>
 
     <script>
+        // --- 1. THE MASTER TIMELINE ---
+        
         const texts = ["Intelligent Systems", "Neuromorphic", "Edge AI", "Neuro-Symbolic", "Ambient Compute"];
         
         const el1 = document.getElementById("text1");
@@ -517,6 +501,7 @@
         let morphTime = 1.0;    
         let cooldown = cooldownTime;
         let gooeyAnimationId;
+        let shaderActive = true; // Control flag for WebGL loop
 
         el1.textContent = texts[0];
         el2.textContent = texts[1];
@@ -576,7 +561,7 @@
 
         function triggerBrandReveal() {
             preloader.style.opacity = '0';
-            introLogo.style.opacity = '1'; 
+            introLogo.style.opacity = '1'; // Show logo during shader
             
             setTimeout(() => {
                 preloader.style.display = 'none';
@@ -584,9 +569,11 @@
                 
                 setTimeout(() => {
                     brandReveal.style.opacity = '0';
-                    introLogo.style.opacity = '0'; 
+                    introLogo.style.opacity = '0'; // Hide intro logo as nav comes in
                     
-                    shaderContainer.style.opacity = '0.15'; 
+                    // Stop shader loop and fade it out slightly
+                    shaderActive = false; 
+                    shaderContainer.style.opacity = '0.15'; // Dim it to become a static background
                     
                     setTimeout(() => {
                         brandReveal.style.display = 'none';
@@ -604,6 +591,7 @@
             }, 1200); 
         }
 
+        // --- 2. START WEBGL SHADER ---
         function initShader() {
             const container = document.getElementById('shader-container');
             const scene = new THREE.Scene();
@@ -616,7 +604,7 @@
             container.appendChild(renderer.domElement);
 
             const uniforms = {
-                time: { type: "f", value: 0.0 },
+                time: { type: "f", value: 1.0 },
                 resolution: { type: "v2", value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
             };
 
@@ -628,20 +616,16 @@
                     uniform vec2 resolution;
                     uniform float time;
                     void main(void) {
-                        vec2 uv = gl_FragCoord.xy / resolution.xy;
-                        vec2 p = uv * 2.0 - 1.0;
-                        p.x *= resolution.x / resolution.y;
-                        
-                        float t = time * 0.15;
-                        
-                        float wave1 = sin(length(p) * 3.0 - t);
-                        float wave2 = sin(p.x * 2.0 + t) * cos(p.y * 2.0 - t);
-                        
-                        float intensity = (wave1 + wave2) * 0.25 + 0.25;
-                        
-                        vec3 color = vec3(intensity * 0.4);
-                        
-                        gl_FragColor = vec4(color, 1.0);
+                        vec2 uv = (gl_FragCoord.xy * 2.0 - resolution.xy) / min(resolution.x, resolution.y);
+                        float t = time * 0.05;
+                        float lineWidth = 0.002;
+                        vec3 color = vec3(0.0);
+                        for(int j = 0; j < 3; j++){
+                            for(int i=0; i < 5; i++){
+                                color[j] += lineWidth*float(i*i) / abs(fract(t - 0.01*float(j)+float(i)*0.01)*5.0 - length(uv) + mod(uv.x+uv.y, 0.2));
+                            }
+                        }
+                        gl_FragColor = vec4(color[0], color[1], color[2], 1.0);
                     }
                 `,
                 transparent: true
@@ -653,9 +637,14 @@
                 renderer.setSize(window.innerWidth, window.innerHeight);
                 uniforms.resolution.value.x = window.innerWidth;
                 uniforms.resolution.value.y = window.innerHeight;
+                // Render once on resize if animation is stopped
+                if(!shaderActive) renderer.render(scene, camera);
             });
 
             function renderShader() {
+                // STOP CONDITION: Kills the requestAnimationFrame loop to save CPU
+                if (!shaderActive) return; 
+                
                 requestAnimationFrame(renderShader);
                 uniforms.time.value += 0.05;
                 renderer.render(scene, camera);
@@ -663,9 +652,12 @@
             renderShader();
         }
 
+        // --- 3. START SEQUENCE ---
         initShader();    
         animateGooey();  
 
+
+        // --- 4. POWER GRAPH CANVAS & SCROLL LOGIC ---
         const canvas = document.getElementById('powerGraph');
         const ctx = canvas.getContext('2d');
         
@@ -722,6 +714,7 @@
         }
         drawGraph();
 
+        // Scroll Observer
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
